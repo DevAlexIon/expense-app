@@ -5,6 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/authRoutes";
+import transactionRoutes from "./routes/transactionRoutes";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(cors());
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.use("/transactions", transactionRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/", (_req, res) => {
