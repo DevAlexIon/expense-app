@@ -5,13 +5,6 @@ const router = express.Router();
 
 /**
  * @swagger
- * tags:
- *   name: Auth
- *   description: User authentication
- */
-
-/**
- * @swagger
  * /api/auth/register:
  *   post:
  *     summary: Register a new user
@@ -36,9 +29,14 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
  *       400:
  *         description: Missing fields or user already exists
  */
+
 router.post("/register", registerUser);
 
 /**
@@ -64,9 +62,14 @@ router.post("/register", registerUser);
  *     responses:
  *       200:
  *         description: Successful login with token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
  *       400:
  *         description: Invalid credentials
  */
+
 router.post("/login", loginUser);
 
 export default router;
