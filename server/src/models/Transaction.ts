@@ -11,7 +11,7 @@ interface ITransaction extends Document {
 
 const transactionSchema = new Schema<ITransaction>({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  type: { type: String, enum: ["income", "expense"], required: true },
+  type: { type: String, enum: ["income", "expense"] },
   amount: { type: Number, required: true },
   category: { type: String, required: true },
   description: String,

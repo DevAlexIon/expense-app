@@ -2,6 +2,7 @@ import express from "express";
 import { protect } from "../middlewares/middleware";
 import {
   createTransaction,
+  editTransaction,
   getTransactions,
 } from "../controllers/transactionController";
 
@@ -88,5 +89,56 @@ router.get("/", protect, getTransactions);
  */
 
 router.post("/", protect, createTransaction);
+
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   patch:
+ *     summary: Update a transaction by ID
+ *     tags: [Transaction]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Transaction ID to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 enum: [income, expense]
+ *               amount:
+ *                 type: number
+ *               category:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *                 nullable: true
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Transaction updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Transaction'
+ *       400:
+ *         description: Bad request (e.g., invalid input)
+ *       401:
+ *         description: Unauthorized - No token or invalid token
+ *       404:
+ *         description: Transaction not found
+ */
+router.patch("/:id", protect, editTransaction);
 
 export default router;
