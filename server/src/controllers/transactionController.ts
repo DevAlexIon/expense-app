@@ -32,6 +32,12 @@ export const createTransaction = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
+    if (amount < 0) {
+      return res
+        .status(400)
+        .json({ message: "Amount must be a positive number." });
+    }
+
     const newTransaction = await Transaction.create({
       user: req.user!.id,
       type,
@@ -71,6 +77,23 @@ export const editTransaction = async (req: AuthRequest, res: Response) => {
     }
 
     return res.json(updatedTransaction);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const deleteTransaction = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const deletedTransaction = await Transaction.findByIdAndDelete(id);
+
+    if (!deletedTransaction) {
+      return res.status(404).json({ message: "Transaction not found." });
+    }
+
+    return res.json({ message: "Transaction deleted successfully." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

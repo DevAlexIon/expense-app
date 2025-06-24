@@ -2,6 +2,7 @@ import express from "express";
 import { protect } from "../middlewares/middleware";
 import {
   createTransaction,
+  deleteTransaction,
   editTransaction,
   getTransactions,
 } from "../controllers/transactionController";
@@ -140,5 +141,30 @@ router.post("/", protect, createTransaction);
  *         description: Transaction not found
  */
 router.patch("/:id", protect, editTransaction);
+
+/**
+ * @swagger
+ * /transactions/{id}:
+ *   delete:
+ *     summary: Delete a transaction by ID
+ *     tags: [Transaction]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Transaction ID to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Transaction deleted successfully
+ *       401:
+ *         description: Unauthorized - No token or invalid token
+ *       404:
+ *         description: Transaction not found
+ */
+router.delete("/:id", protect, deleteTransaction);
 
 export default router;
