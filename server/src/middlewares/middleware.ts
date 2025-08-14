@@ -18,9 +18,9 @@ export const protect = (
   const token = authHeader.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      userId: string;
+      id: string;
     };
-    req.user = { id: decoded.userId };
+    req.user = { id: decoded.id };
     next();
   } catch (err) {
     res.status(401).json({ message: "Token is not valid" });
