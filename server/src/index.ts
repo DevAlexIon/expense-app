@@ -12,9 +12,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  "https://expense-web-app-g0kp.onrender.com",
+  "http://localhost:3050",
+];
+
 app.use(
   cors({
-    origin: "https://expense-web-app-g0kp.onrender.com",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -24,12 +29,13 @@ app.use(
 app.options(
   /.*/,
   cors({
-    origin: "https://expense-web-app-g0kp.onrender.com",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/transactions", transactionRoutes);
