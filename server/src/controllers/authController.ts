@@ -32,6 +32,7 @@ export const registerUser = async (
       name,
       email,
       password: hashedPassword,
+      currency: "RON",
     });
 
     await newUser.save();
@@ -41,6 +42,7 @@ export const registerUser = async (
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        currency: newUser.currency,
       },
       token: generateToken(newUser._id.toString()),
     });

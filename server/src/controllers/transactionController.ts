@@ -6,7 +6,7 @@ interface TransactionBody {
   type: "income" | "expense";
   amount: number;
   category: string;
-  description?: string;
+  description: string;
   date: Date;
 }
 
@@ -57,8 +57,8 @@ export const createTransaction = async (req: AuthRequest, res: Response) => {
 export const editTransaction = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { type, amount, category, description, date } =
-      req.body as TransactionBody;
+    const { type, amount, category, description, date } = (req.body ||
+      {}) as TransactionBody;
 
     const updatedTransaction = await Transaction.findByIdAndUpdate(
       id,
