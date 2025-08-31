@@ -7,14 +7,16 @@ interface UserProfile {
   name?: string;
   email?: string;
   currency?: string;
-  password?: string;
+  currentPassword?: string;
+  newPassword?: string;
 }
 
 export const updateProfile = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, email, password, currency } = req.body || ({} as UserProfile);
+    const { name, email, currency, currentPassword, newPassword } =
+      req.body as UserProfile;
 
-    if (!name && !email && !password && !currency) {
+    if (!name && !email && !currency && !currentPassword && !newPassword) {
       return res
         .status(400)
         .json({ message: "Please provide at least one field to update." });
@@ -28,8 +30,22 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
     if (name) user.name = name;
     if (email) user.email = email;
     if (currency) user.currency = currency;
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
+
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({
+          message: "Current password is required to set a new password.",
+        });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json({ message: "Current password is incorrect." });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
       user.password = hashedPassword;
     }
 
