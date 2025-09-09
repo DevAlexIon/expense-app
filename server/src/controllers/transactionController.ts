@@ -42,6 +42,7 @@ export const getTransactions = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 export const createTransaction = async (req: AuthRequest, res: Response) => {
   try {
     const { type, amount, category, description, date } =

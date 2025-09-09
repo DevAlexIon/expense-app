@@ -6,8 +6,10 @@ export async function convertCurrency(
   if (from === to) return amount;
 
   const res = await fetch(
-    `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}`
+    `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}&access_key=${process.env.API_KEY}`
   );
+
   const data = await res.json();
+
   return data.result ?? amount;
 }
