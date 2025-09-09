@@ -1,6 +1,8 @@
 import { Response } from "express";
 import Transaction from "../models/Transaction";
 import { AuthRequest } from "../middlewares/middleware";
+import { convertCurrency } from "../utils/convercy";
+import { User } from "../models/User";
 
 interface TransactionBody {
   type: "income" | "expense";
@@ -13,16 +15,33 @@ interface TransactionBody {
 export const getTransactions = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
-    const transactions = await Transaction.find({ user: userId }).sort({
-      date: -1,
-    });
-    res.json(transactions);
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    const transactions = await Transaction.find({ user: userId }).lean();
+
+    const convertedTransactions = await Promise.all(
+      transactions.map(async (t) => {
+        const convertedAmount = await convertCurrency(
+          t.amount,
+          t.currency,
+          user.currency
+        );
+
+        return {
+          ...t,
+          amount: convertedAmount,
+          currency: user.currency,
+        };
+      })
+    );
+
+    res.json(convertedTransactions);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 export const createTransaction = async (req: AuthRequest, res: Response) => {
   try {
     const { type, amount, category, description, date } =
