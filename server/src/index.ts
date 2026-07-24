@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "https://expense-web-app-g0kp.onrender.com",
+  "https://expense-web-app-a1h2.onrender.com",
   "http://localhost:3050",
   ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
   ...(process.env.CORS_ORIGINS
