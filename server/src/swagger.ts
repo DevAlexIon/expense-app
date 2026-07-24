@@ -1,4 +1,16 @@
+import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
+
+const routeGlobs = [
+  path.join(__dirname, "routes", "*.ts"),
+  path.join(__dirname, "routes", "*.js"),
+  path.join(__dirname, "../src/routes", "*.ts"),
+];
+
+const productionUrl =
+  process.env.API_PUBLIC_URL ||
+  process.env.RENDER_EXTERNAL_URL ||
+  "https://expense-app-m3v9.onrender.com";
 
 export const swaggerSpec = swaggerJSDoc({
   definition: {
@@ -9,9 +21,9 @@ export const swaggerSpec = swaggerJSDoc({
       description: "API documentation for Expense Tracker project",
     },
     servers: [
-      {
-        url: "http://localhost:5001",
-      },
+      { url: productionUrl, description: "Production" },
+      { url: "http://localhost:5001", description: "Local" },
+      { url: "/", description: "Current host" },
     ],
     components: {
       securitySchemes: {
@@ -49,11 +61,12 @@ export const swaggerSpec = swaggerJSDoc({
 
         UserResponse: {
           type: "object",
-          required: ["id", "name", "email"],
+          required: ["_id", "name", "email", "currency"],
           properties: {
-            id: { type: "string" },
+            _id: { type: "string" },
             name: { type: "string" },
             email: { type: "string" },
+            currency: { type: "string" },
           },
         },
 
@@ -64,11 +77,12 @@ export const swaggerSpec = swaggerJSDoc({
             token: { type: "string" },
             user: {
               type: "object",
-              required: ["id", "name", "email"],
+              required: ["id", "name", "email", "currency"],
               properties: {
                 id: { type: "string" },
                 name: { type: "string" },
                 email: { type: "string" },
+                currency: { type: "string" },
               },
             },
           },
@@ -81,5 +95,5 @@ export const swaggerSpec = swaggerJSDoc({
       },
     ],
   },
-  apis: ["./src/routes/*.ts"],
+  apis: routeGlobs,
 });

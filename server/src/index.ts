@@ -46,7 +46,23 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/transactions", transactionRoutes);
 app.use("/profile", userRoutes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.get("/api-docs.json", (_req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+    },
+  })
+);
 
 app.get("/", (_req, res) => {
   res.send("Server is running");
